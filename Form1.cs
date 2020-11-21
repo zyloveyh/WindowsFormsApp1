@@ -37,5 +37,49 @@ namespace WindowsFormsApp1
             // }
 
         }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Button allBtn = (Button)sender;
+            if (allBtn.Text.Equals("全部执行"))
+            {
+                //点击了全部执行按钮,便禁用单条执行按钮
+                overTurnBtnState();
+                allBtn.Text = "停止";
+            }
+            else
+            {
+                //点击了停止 按钮,便停止刷单
+                overTurnBtnState();
+                allBtn.Text = "全部执行";
+            }
+
+
+
+        }
+
+
+
+        private void overTurnBtnState()
+        {
+            List<QuestionaireEntity> datas = QuestionaireData.getData();
+            List<string> serialList = new List<string>();
+            foreach (var entity in datas)
+            {
+                serialList.Add(entity.SeriaNum);
+            }
+            foreach (var control in this.Controls)
+            {
+                if (control.GetType().Name.Equals("Button"))
+                {
+                    Button btn = (Button)control;
+                    if (serialList.Contains(btn.Name))
+                    {
+                        //确认是生成出来的Button控件,修改enable 状态
+                        btn.Enabled = !btn.Enabled;
+                    }
+                }
+            }
+        }
     }
 }

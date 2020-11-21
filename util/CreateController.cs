@@ -11,6 +11,7 @@ namespace WindowsFormsApp1.util
 {
     class CreateController
     {
+
         //生成对应的空间
         public static void addController(int x, int y, Form1 form, QuestionaireEntity entity)
         {
@@ -53,6 +54,8 @@ namespace WindowsFormsApp1.util
             actionButton.Text = "单条执行";
             actionButton.Location = new System.Drawing.Point(600, y);
             form.Controls.Add(actionButton);
+            //button按钮添加事件
+            actionButton.Click += new System.EventHandler(CreateController.btn_Click);
 
             Label successNumLabel = new Label();
             successNumLabel.Text = "完成数量: 0";
@@ -60,5 +63,17 @@ namespace WindowsFormsApp1.util
             successNumLabel.Location = new System.Drawing.Point(700, y);
             form.Controls.Add(successNumLabel);
         }
+
+
+
+        public static void btn_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+
+            MessageBox.Show(btn.Name);
+            //按钮btnOk的点击事件
+        }
+
     }
+
 }
