@@ -150,7 +150,10 @@ namespace WindowsFormsApp1.util
 
                 //解析返回的结果
                 JavaScriptObject re = JavaScriptConvert.DeserializeObject<JavaScriptObject>(resultStr);
-
+                if (re == null)
+                {
+                    continue;
+                }
                 string msg = re["msg"].ToString();
                 System.Diagnostics.Debug.WriteLine("code: " + re["code"].ToString());
                 System.Diagnostics.Debug.WriteLine("msg: " + msg);

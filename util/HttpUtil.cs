@@ -54,7 +54,7 @@ namespace WindowsFormsApp1.util
 
         public static string HTTPJsonGet(string url)
         {
-            /**
+
             string result = string.Empty;
             try
             {
@@ -71,8 +71,8 @@ namespace WindowsFormsApp1.util
                 System.Diagnostics.Debug.WriteLine("HTTPJsonGet异常:" + ex.Message);
 
             }
-            **/
-            string result = "{\"code\":200,\"msg\":\"问卷添加成功，感谢您的参与！\",\"data\":[]}";
+
+            //string result = "{\"code\":200,\"msg\":\"问卷添加成功，感谢您的参与！\",\"data\":[]}";
             return result;
         }
 
