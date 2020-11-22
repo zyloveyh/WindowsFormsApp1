@@ -8,3 +8,5 @@ D:\ZY\2-c#\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CoreCompileInputs.
 D:\ZY\2-c#\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.exe
 D:\ZY\2-c#\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.pdb
 D:\ZY\2-c#\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Form1.resources
+D:\ZY\2-c#\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.dll
+D:\ZY\2-c#\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CopyComplete
