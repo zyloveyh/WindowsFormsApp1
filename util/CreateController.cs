@@ -139,10 +139,10 @@ namespace WindowsFormsApp1.util
             int tempNum = 0;
             successNum.TryGetValue(entity.SeriaNum, out tempNum);
 
-            while (tempNum <= entity.UpNum)
+            while (tempNum < entity.UpNum)
             {
                 //需要暂停20秒左右的时间,等待ip更新
-                Thread.Sleep(200);
+                Thread.Sleep(2000);
                 System.Diagnostics.Debug.WriteLine("开始调用接口");
                 //todo 进行接口调用,判断是否调用成功,更新主界面数据,调用记录保存
                 String resultStr = HttpUtil.HTTPJsonGet(getURL(entity));

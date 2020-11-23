@@ -62,6 +62,7 @@ namespace WindowsFormsApp1.util
                 HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
                 request.ContentType = "application/json";
                 request.Method = "GET";
+                request.ReadWriteTimeout = 1000;
                 HttpWebResponse resp = request.GetResponse() as HttpWebResponse;
                 System.IO.StreamReader reader = new System.IO.StreamReader(resp.GetResponseStream(), ENCODING);
                 result = reader.ReadToEnd();
