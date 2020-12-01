@@ -9,3 +9,4 @@ D:\ZY\2-c#\WindowsFormsApp1\obj\Release\WindowsFormsApp1.csproj.CoreCompileInput
 D:\ZY\2-c#\WindowsFormsApp1\obj\Release\WindowsFormsApp1.csproj.CopyComplete
 D:\ZY\2-c#\WindowsFormsApp1\obj\Release\工具.exe
 D:\ZY\2-c#\WindowsFormsApp1\obj\Release\工具.pdb
+D:\ZY\2-c#\WindowsFormsApp1\obj\Release\WindowsFormsApp1.csprojAssemblyReference.cache

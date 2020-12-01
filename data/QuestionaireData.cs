@@ -8,16 +8,17 @@ namespace WindowsFormsApp1.data
 {
     class QuestionaireData
     {
-           public static List<QuestionaireEntity> getData()
+        public static List<QuestionaireEntity> result = new List<QuestionaireEntity>();
+
+
+        public static List<QuestionaireEntity> getData()
         {
-            
-            List<QuestionaireEntity> result  = new List<QuestionaireEntity>();
 
             QuestionaireEntity entity1 = new QuestionaireEntity();
             QuestionaireEntity entity2 = new QuestionaireEntity();
             QuestionaireEntity entity3 = new QuestionaireEntity();
             QuestionaireEntity entity4 = new QuestionaireEntity();
-            
+
 
             entity1.SeriaNum = "1";
             entity1.Name = "测试";

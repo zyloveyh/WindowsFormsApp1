@@ -21,6 +21,7 @@ namespace WindowsFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //设置数据
             CheckForIllegalCrossThreadCalls = false;
             List<QuestionaireEntity> dataList = QuestionaireData.getData();
             for (int i = 0; i < dataList.Count; i++)
@@ -116,6 +117,15 @@ namespace WindowsFormsApp1
                         }
                     }
                 }
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (CreateController.threadDict.Keys.Count > 0)
+            {
+                MessageBox.Show("请先关闭所有刷题");
+                e.Cancel = true;
             }
         }
     }

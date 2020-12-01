@@ -20,6 +20,8 @@ namespace WindowsFormsApp1.data
         private Dictionary<int, int> answerScope;
         //刷题上限,默认10条
         private int upNum =10;
+        //刷题的时间间隔
+        private int slotTime = 20;
 
 
         public string SeriaNum { get => seriaNum; set => seriaNum = value; }
@@ -28,5 +30,6 @@ namespace WindowsFormsApp1.data
         public string Address { get => address; set => address = value; }
         public Dictionary<int, int> AnswerScope { get => answerScope; set => answerScope = value; }
         public int UpNum { get => upNum; set => upNum = value; }
+        public int SlotTime { get => slotTime; set => slotTime = value; }
     }
 }

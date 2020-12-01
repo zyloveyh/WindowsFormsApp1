@@ -36,6 +36,7 @@ namespace WindowsFormsApp1
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -49,7 +50,7 @@ namespace WindowsFormsApp1
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(600, 10);
+            this.button1.Location = new System.Drawing.Point(690, 5);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -93,12 +94,22 @@ namespace WindowsFormsApp1
             this.label5.TabIndex = 6;
             this.label5.Text = "刷题上限";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(570, 10);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(95, 12);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "刷题间隔时间(s)";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.ClientSize = new System.Drawing.Size(884, 561);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -108,6 +119,7 @@ namespace WindowsFormsApp1
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "问卷调查工具";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -121,6 +133,7 @@ namespace WindowsFormsApp1
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
     }
 }
 

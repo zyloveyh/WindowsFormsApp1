@@ -26,7 +26,6 @@ namespace WindowsFormsApp1.util
         {
             //主窗口赋值给变量
             mainForm = form;
-
             //序号控件
             Label seriaLable = new Label();
             seriaLable.Text = entity.SeriaNum;
@@ -55,16 +54,29 @@ namespace WindowsFormsApp1.util
 
             form.Controls.Add(addressText);
 
-            Label upNumLabel = new Label();
-            upNumLabel.Text = entity.UpNum.ToString();
-            upNumLabel.Size = new System.Drawing.Size(50, 15);
-            upNumLabel.Location = new System.Drawing.Point(500, y);
-            form.Controls.Add(upNumLabel);
+            TextBox upNumText = new TextBox();
+            upNumText.Name = "upNum_" + entity.SeriaNum;
+            upNumText.Text = entity.UpNum.ToString();
+            upNumText.Size = new System.Drawing.Size(50, 15);
+            upNumText.Location = new System.Drawing.Point(500, y);
+            form.Controls.Add(upNumText);
+            //添加内容修改事件
+            upNumText.TextChanged += new System.EventHandler(upNumChange);
+
+
+            NumericUpDown slotNum = new NumericUpDown();
+            slotNum.Name = "slotNum_" + entity.SeriaNum;
+            slotNum.Value = entity.SlotTime; ;
+            slotNum.Size = new System.Drawing.Size(50, 25);
+            slotNum.Location = new System.Drawing.Point(570, y);
+            form.Controls.Add(slotNum);
+            //添加内容修改事件
+            slotNum.ValueChanged += new System.EventHandler(slotTimeChange);
 
             Button actionButton = new Button();
             actionButton.Name = entity.SeriaNum;
             actionButton.Text = "单条执行";
-            actionButton.Location = new System.Drawing.Point(600, y);
+            actionButton.Location = new System.Drawing.Point(690, y);
             form.Controls.Add(actionButton);
             //button按钮添加事件
             actionButton.Click += new System.EventHandler(CreateController.btn_Click);
@@ -74,11 +86,68 @@ namespace WindowsFormsApp1.util
             //设置label名称,以便后续查询到
             successNumLabel.Name = "label_" + entity.SeriaNum;
             successNumLabel.AutoSize = true;
-            successNumLabel.Location = new System.Drawing.Point(700, y);
+            successNumLabel.Location = new System.Drawing.Point(800, y);
             form.Controls.Add(successNumLabel);
         }
 
+        public static void upNumChange(object sender, EventArgs e)
+        {
+            //上限数量改变事件
+            TextBox tb = (TextBox)sender;
+            try
+            {
+                int value = int.Parse(tb.Text);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("请输入有效数字!");
+            }
 
+            List<QuestionaireEntity> questionList = QuestionaireData.result;
+            QuestionaireEntity entity = new QuestionaireEntity();
+            foreach (var q in questionList)
+            {
+                if ("upNum_" + q.SeriaNum == tb.Name)
+                {
+                    QuestionaireData.result.Remove(q);
+                    entity = q;
+                    break;
+                }
+            }
+            entity.UpNum = int.Parse(tb.Text);
+            QuestionaireData.result.Add(entity);
+            System.Diagnostics.Debug.WriteLine("刷题数量上限修改为: " + entity.UpNum);
+        }
+
+        public static void slotTimeChange(object sender, EventArgs e)
+        {
+            
+            //刷题间隔时间改变事件
+            NumericUpDown slotNum = (NumericUpDown)sender;
+            try
+            {
+                int value = int.Parse(slotNum.Value.ToString());
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("请输入有效数字!");
+            }
+            List<QuestionaireEntity> questionList = QuestionaireData.result;
+            QuestionaireEntity entity = new QuestionaireEntity();
+            foreach (var q in questionList)
+            {
+                if ("slotNum_" + q.SeriaNum == slotNum.Name)
+                {
+                    QuestionaireData.result.Remove(q);
+                    entity = q;
+                    break;
+                }
+            }
+            
+            entity.SlotTime = int.Parse(slotNum.Value.ToString());
+            QuestionaireData.result.Add(entity);
+            System.Diagnostics.Debug.WriteLine("刷题间隔时间修改为: "+entity.SlotTime);
+        }
 
         public static void btn_Click(object sender, EventArgs e)
         {
@@ -94,7 +163,7 @@ namespace WindowsFormsApp1.util
                     return;
                 }
                 //获取需要的刷题信息
-                List<QuestionaireEntity> questionList = QuestionaireData.getData();
+                List<QuestionaireEntity> questionList = QuestionaireData.result;
                 QuestionaireEntity entity = new QuestionaireEntity();
                 foreach (var q in questionList)
                 {
@@ -142,8 +211,9 @@ namespace WindowsFormsApp1.util
             while (tempNum < entity.UpNum)
             {
                 //需要暂停20秒左右的时间,等待ip更新
-                Thread.Sleep(2000);
-                System.Diagnostics.Debug.WriteLine("开始调用接口");
+                Thread.Sleep(entity.SlotTime*1000);
+                System.Diagnostics.Debug.WriteLine( "开始调用接口,调用时间间隔:" + (entity.SlotTime * 1000).ToString());
+                
                 //todo 进行接口调用,判断是否调用成功,更新主界面数据,调用记录保存
                 String resultStr = HttpUtil.HTTPJsonGet(getURL(entity));
                 System.Diagnostics.Debug.WriteLine("接口返回: " + resultStr);
