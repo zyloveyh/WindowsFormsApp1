@@ -10,3 +10,4 @@ D:\ZY\2-c#\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CoreCompileInputs.
 D:\ZY\2-c#\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CopyComplete
 D:\ZY\2-c#\WindowsFormsApp1\obj\Debug\工具.exe
 D:\ZY\2-c#\WindowsFormsApp1\obj\Debug\工具.pdb
+D:\ZY\2-c#\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.logForm.resources

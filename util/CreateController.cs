@@ -9,10 +9,14 @@ using System.Drawing;
 using System.Threading;
 using WindowsFormsApp1.entity;
 using Newtonsoft.Json;
+using System.Net;
+using System.Text.RegularExpressions;
+
 namespace WindowsFormsApp1.util
 {
     class CreateController
     {
+        static object syncLocker = new object();
 
         //主窗体对象,用来修改启动的内容
         private static Form1 mainForm;
@@ -54,17 +58,19 @@ namespace WindowsFormsApp1.util
 
             form.Controls.Add(addressText);
 
-            TextBox upNumText = new TextBox();
+            NumericUpDown upNumText = new NumericUpDown();
+            upNumText.Maximum = 10000;
             upNumText.Name = "upNum_" + entity.SeriaNum;
             upNumText.Text = entity.UpNum.ToString();
             upNumText.Size = new System.Drawing.Size(50, 15);
             upNumText.Location = new System.Drawing.Point(500, y);
             form.Controls.Add(upNumText);
             //添加内容修改事件
-            upNumText.TextChanged += new System.EventHandler(upNumChange);
+            upNumText.ValueChanged += new System.EventHandler(upNumChange);
 
 
             NumericUpDown slotNum = new NumericUpDown();
+            slotNum.Maximum = 10000;
             slotNum.Name = "slotNum_" + entity.SeriaNum;
             slotNum.Value = entity.SlotTime; ;
             slotNum.Size = new System.Drawing.Size(50, 25);
@@ -93,35 +99,41 @@ namespace WindowsFormsApp1.util
         public static void upNumChange(object sender, EventArgs e)
         {
             //上限数量改变事件
-            TextBox tb = (TextBox)sender;
+            NumericUpDown tb = (NumericUpDown)sender;
             try
             {
-                int value = int.Parse(tb.Text);
+                int value = int.Parse(tb.Value.ToString());
             }
             catch (Exception)
             {
                 MessageBox.Show("请输入有效数字!");
             }
-
-            List<QuestionaireEntity> questionList = QuestionaireData.result;
-            QuestionaireEntity entity = new QuestionaireEntity();
-            foreach (var q in questionList)
+            //加上锁 进行对QuestionaireData.result; 的修改
+            lock (syncLocker)
             {
-                if ("upNum_" + q.SeriaNum == tb.Name)
+                logForm log = logForm.InstanceLogForm();
+                List<QuestionaireEntity> questionList = QuestionaireData.result;
+                QuestionaireEntity entity = new QuestionaireEntity();
+                foreach (var q in questionList)
                 {
-                    QuestionaireData.result.Remove(q);
-                    entity = q;
-                    break;
+                    if ("upNum_" + q.SeriaNum == tb.Name)
+                    {
+                        entity = q;
+                        QuestionaireData.result.Remove(q);
+                        break;
+                    }
                 }
+                entity.UpNum = int.Parse(tb.Value.ToString());
+                QuestionaireData.result.Add(entity);
+                log.addLog("序号: " + entity.SeriaNum + "修改了刷题上限为: " + entity.UpNum);
             }
-            entity.UpNum = int.Parse(tb.Text);
-            QuestionaireData.result.Add(entity);
-            System.Diagnostics.Debug.WriteLine("刷题数量上限修改为: " + entity.UpNum);
+
+            System.Diagnostics.Debug.WriteLine("刷题数量上限修改为: " + tb.Value.ToString());
         }
 
         public static void slotTimeChange(object sender, EventArgs e)
         {
-            
+
             //刷题间隔时间改变事件
             NumericUpDown slotNum = (NumericUpDown)sender;
             try
@@ -132,26 +144,43 @@ namespace WindowsFormsApp1.util
             {
                 MessageBox.Show("请输入有效数字!");
             }
-            List<QuestionaireEntity> questionList = QuestionaireData.result;
-            QuestionaireEntity entity = new QuestionaireEntity();
-            foreach (var q in questionList)
+            //加上锁 进行对QuestionaireData.result; 的修改
+            lock (syncLocker)
             {
-                if ("slotNum_" + q.SeriaNum == slotNum.Name)
+                logForm log = logForm.InstanceLogForm();
+                List<QuestionaireEntity> questionList = QuestionaireData.result;
+                QuestionaireEntity entity = new QuestionaireEntity();
+                foreach (var q in questionList)
                 {
-                    QuestionaireData.result.Remove(q);
-                    entity = q;
-                    break;
+                    if ("slotNum_" + q.SeriaNum == slotNum.Name)
+                    {
+                        QuestionaireData.result.Remove(q);
+                        entity = q;
+                        break;
+                    }
                 }
+                entity.SlotTime = int.Parse(slotNum.Value.ToString());
+                QuestionaireData.result.Add(entity);
+                log.addLog("序号: " + entity.SeriaNum + "修改了刷题间隔为: " + entity.SlotTime);
             }
-            
-            entity.SlotTime = int.Parse(slotNum.Value.ToString());
-            QuestionaireData.result.Add(entity);
-            System.Diagnostics.Debug.WriteLine("刷题间隔时间修改为: "+entity.SlotTime);
+            System.Diagnostics.Debug.WriteLine("刷题间隔时间修改为: " + slotNum.Value);
         }
 
         public static void btn_Click(object sender, EventArgs e)
         {
+            logForm log = logForm.InstanceLogForm();
             Button btn = (Button)sender;
+            //获取需要的刷题信息
+            List<QuestionaireEntity> questionList = QuestionaireData.result;
+            QuestionaireEntity entity = new QuestionaireEntity();
+            foreach (var q in questionList)
+            {
+                if (q.SeriaNum == btn.Name)
+                {
+                    entity = q;
+                    break;
+                }
+            }
 
             if (btn.Text == "单条执行")
             {
@@ -162,17 +191,7 @@ namespace WindowsFormsApp1.util
                     MessageBox.Show("此序号的刷题线程已经启动,请勿重复启动!");
                     return;
                 }
-                //获取需要的刷题信息
-                List<QuestionaireEntity> questionList = QuestionaireData.result;
-                QuestionaireEntity entity = new QuestionaireEntity();
-                foreach (var q in questionList)
-                {
-                    if (q.SeriaNum == btn.Name)
-                    {
-                        entity = q;
-                        break;
-                    }
-                }
+
                 //新建刷题线程
                 Thread thread = new Thread(() => exercise(mainForm, entity));
                 //加入到线程集合中
@@ -193,6 +212,7 @@ namespace WindowsFormsApp1.util
                 if (th != null)
                 {
                     //停止此线程
+                    log.addLog(getLogStr(entity, " 手动暂停了此刷题"));
                     th.Abort();
                     while (th.ThreadState != ThreadState.Aborted)
                     {
@@ -203,17 +223,19 @@ namespace WindowsFormsApp1.util
                 }
             }
         }
-        public static void exercise(Form1 mainForm, QuestionaireEntity entity)
+        public static void exercise(Form1 mainForm, QuestionaireEntity questEntity)
         {
+            QuestionaireEntity entity = questEntity;
+            logForm log = logForm.InstanceLogForm();
+            log.addLog(getLogStr(entity, " 开始刷题"));
+
             int tempNum = 0;
             successNum.TryGetValue(entity.SeriaNum, out tempNum);
 
             while (tempNum < entity.UpNum)
             {
-                //需要暂停20秒左右的时间,等待ip更新
-                Thread.Sleep(entity.SlotTime*1000);
-                System.Diagnostics.Debug.WriteLine( "开始调用接口,调用时间间隔:" + (entity.SlotTime * 1000).ToString());
-                
+                System.Diagnostics.Debug.WriteLine("开始调用接口,调用时间间隔:" + (entity.SlotTime * 1000).ToString());
+
                 //todo 进行接口调用,判断是否调用成功,更新主界面数据,调用记录保存
                 String resultStr = HttpUtil.HTTPJsonGet(getURL(entity));
                 System.Diagnostics.Debug.WriteLine("接口返回: " + resultStr);
@@ -232,6 +254,8 @@ namespace WindowsFormsApp1.util
                     if (msg.Contains("已经填写过问卷"))
                     {
                         //已经填写过了
+
+                        log.addLog(getLogStr(entity, " 刷题入库失败! 刷题结果: " + msg));
                     }
                     if (msg.Contains("问卷添加成功"))
                     {
@@ -266,12 +290,25 @@ namespace WindowsFormsApp1.util
                                 }
                             }
                         }
-
+                        //添加日志
+                        log.addLog(getLogStr(entity, " 刷题入库成功! 刷题结果: " + msg));
                     }
-
                 }
+                List<QuestionaireEntity> questionList = QuestionaireData.result;
+                foreach (var q in questionList)
+                {
+                    if (q.SeriaNum == entity.SeriaNum)
+                    {
+                        entity = q;
+                        break;
+                    }
+                }
+                //需要暂停20秒左右的时间,等待ip更新
+                Thread.Sleep(entity.SlotTime * 1000);
             }
 
+
+            log.addLog(getLogStr(entity, " 刷题结束 "));
             //走到这里,刷单线程,完成了目标任务
             //修改按钮的显示
             foreach (var control in mainForm.Controls)
@@ -291,6 +328,24 @@ namespace WindowsFormsApp1.util
 
         }
 
+        /**
+         * 设置打印的日志内容
+         */
+        private static string getLogStr(QuestionaireEntity entity, string msg)
+        {
+            string name = entity.Name;
+            if (entity.Name.Length < 20)
+            {
+                for (int i = 0; i < (20 - entity.Name.Length); i++)
+                {
+                    name += "  ";
+                }
+            }
+            string resultStr = "";
+            resultStr = "序号: " + entity.SeriaNum + " 问卷名称: " + name + msg;
+            return resultStr;
+        }
+
         private static string getURL(QuestionaireEntity entity)
         {
             string result = "";
@@ -300,6 +355,29 @@ namespace WindowsFormsApp1.util
             string optioned = CreateAnswer.createAnswer(entity);
             result = url + "&optioned=" + optioned + "&csrf_test_name=" + csrf_test_name;
             return result;
+        }
+
+        public static string HttpGet()
+        {
+            Encoding encode = System.Text.Encoding.GetEncoding("GB2312");
+            WebClient MyWebClient = new WebClient();
+            MyWebClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.84 Safari/537.36");
+            MyWebClient.Credentials = CredentialCache.DefaultCredentials;//获取或设置用于向Internet资源的请求进行身份验证的网络凭据
+            Byte[] pageData = MyWebClient.DownloadData("http://www.net.cn/static/customercare/yourip.asp"); //从指定网站下载数据
+            string pageHtml = encode.GetString(pageData);  //如果获取网站页面采用的是GB2312，则 使用这句
+            return pageHtml;
+        }
+
+        public static string parseHtml(String pageHtml)
+        {
+            string ip = "";
+            Match m = Regex.Match(pageHtml, @"\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}");
+            if (m.Success)
+            {
+                //MessageBox.Show(m.Value);
+            }
+            ip = pageHtml;
+            return ip;
         }
 
     }

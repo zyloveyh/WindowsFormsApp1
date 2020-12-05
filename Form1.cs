@@ -21,6 +21,10 @@ namespace WindowsFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //打开日志窗体
+            logForm log =  logForm.InstanceLogForm();
+            log.Show();
+            log.Visible = false;
             //设置数据
             CheckForIllegalCrossThreadCalls = false;
             List<QuestionaireEntity> dataList = QuestionaireData.getData();
@@ -47,7 +51,7 @@ namespace WindowsFormsApp1
                 allBtn.Text = "停止";
                 //开始执行线程
 
-                List<QuestionaireEntity> questionList = QuestionaireData.getData();
+                List<QuestionaireEntity> questionList = QuestionaireData.result;
 
                 foreach (var q in questionList)
                 {
@@ -96,7 +100,7 @@ namespace WindowsFormsApp1
 
         private void overTurnBtnState(Boolean state)
         {
-            List<QuestionaireEntity> datas = QuestionaireData.getData();
+            List<QuestionaireEntity> datas = QuestionaireData.result;
             List<string> serialList = new List<string>();
             foreach (var entity in datas)
             {
@@ -127,6 +131,13 @@ namespace WindowsFormsApp1
                 MessageBox.Show("请先关闭所有刷题");
                 e.Cancel = true;
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            logForm log = logForm.InstanceLogForm();
+            log.Visible = !log.Visible;
+            
         }
     }
 }
