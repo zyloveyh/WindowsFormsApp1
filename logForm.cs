@@ -48,7 +48,8 @@ namespace WindowsFormsApp1
         {
             lock (syncLocker)
             {
-                logView.AppendText(str);
+                string finalStr = DateTime.Now.ToString() + "  " + str;
+                logView.AppendText(finalStr);
                 logView.AppendText(Environment.NewLine);
                 logView.ScrollToCaret();
             }

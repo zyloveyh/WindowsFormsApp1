@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using WindowsFormsApp1.data;
 
 namespace WindowsFormsApp1.util
 {
@@ -52,28 +53,44 @@ namespace WindowsFormsApp1.util
         }
 */
 
-        public static string HTTPJsonGet(string url)
+        public static string HTTPJsonGet(QuestionaireEntity entity)
         {
-            /**
+            string url = getURL(entity);
             string result = string.Empty;
             try
             {
+                //测试时候使用的接口
+                //url = "http://192.168.0.102:8000/hello/sleep";
                 System.Diagnostics.Debug.WriteLine("开始调用接口: " + url);
                 HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
                 request.ContentType = "application/json";
                 request.Method = "GET";
                 request.ReadWriteTimeout = 1000;
+                request.Timeout = 1000;
                 HttpWebResponse resp = request.GetResponse() as HttpWebResponse;
                 System.IO.StreamReader reader = new System.IO.StreamReader(resp.GetResponseStream(), ENCODING);
                 result = reader.ReadToEnd();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("HTTPJsonGet异常:" + ex.Message);
-
+                logForm log = logForm.InstanceLogForm();
+                log.addLog(CreateController.getLogStr(entity, "  刷题入库失败! 刷题结果::" + ex.Message));
+                System.Diagnostics.Debug.WriteLine("HTTPJsonGet调用超时或者异常:" + ex.Message);
             }
-            **/
-            string result = "{\"code\":200,\"msg\":\"问卷添加成功，感谢您的参与！\",\"data\":[]}";
+
+
+            //string result = "{\"code\":200,\"msg\":\"问卷添加成功，感谢您的参与！\",\"data\":[]}";
+            return result;
+        }
+
+        private static string getURL(QuestionaireEntity entity)
+        {
+            string result = "";
+            string csrf_test_name = "bb13c888c7da784789d130c081ca9d53";
+            string url = entity.Address;
+            url = url.Replace("m=index", "m=addSelOptions");
+            string optioned = CreateAnswer.createAnswer(entity);
+            result = url + "&optioned=" + optioned + "&csrf_test_name=" + csrf_test_name;
             return result;
         }
 

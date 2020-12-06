@@ -22,7 +22,7 @@ namespace WindowsFormsApp1
         private void Form1_Load(object sender, EventArgs e)
         {
             //打开日志窗体
-            logForm log =  logForm.InstanceLogForm();
+            logForm log = logForm.InstanceLogForm();
             log.Show();
             log.Visible = false;
             //设置数据
@@ -55,6 +55,8 @@ namespace WindowsFormsApp1
 
                 foreach (var q in questionList)
                 {
+                    //设置终止线程状态为false
+                    q.CloseThread = false;
                     //先判断线程集合中是否有这个线程
                     if (CreateController.threadDict.ContainsKey(q.SeriaNum))
                     {
@@ -74,6 +76,15 @@ namespace WindowsFormsApp1
             }
             else
             {
+                List<QuestionaireEntity> questionList = QuestionaireData.result;
+                foreach (var q in questionList)
+                {
+                    //设置终止线程状态为false
+                    q.CloseThread = true;
+                }
+                allBtn.Text = "正在停止...";
+
+                /**
                 allBtn.Enabled = false;
                 //点击了停止 按钮,便停止刷单
                 overTurnBtnState(true);
@@ -90,9 +101,8 @@ namespace WindowsFormsApp1
                     }
 
                 }
-                //到此,表示线程是真的结束了
-                CreateController.threadDict = new Dictionary<string, Thread>();
-                allBtn.Enabled = true;
+                **/
+
             }
         }
 
@@ -114,10 +124,9 @@ namespace WindowsFormsApp1
                     if (serialList.Contains(btn.Name))
                     {
                         //确认是生成出来的Button控件,修改enable 状态
-                        btn.Enabled = state;
                         if (state)
                         {
-                            btn.Text = "单条执行";
+                            btn.Text = "停止";
                         }
                     }
                 }
@@ -137,7 +146,7 @@ namespace WindowsFormsApp1
         {
             logForm log = logForm.InstanceLogForm();
             log.Visible = !log.Visible;
-            
+
         }
     }
 }

@@ -24,6 +24,9 @@ namespace WindowsFormsApp1.data
         private int slotTime = 20;
 
 
+        //手动结束此刷题的线程
+        private Boolean closeThread = false;
+
         public string SeriaNum { get => seriaNum; set => seriaNum = value; }
         public string Name { get => name; set => name = value; }
         public int QuestionNum { get => questionNum; set => questionNum = value; }
@@ -31,5 +34,6 @@ namespace WindowsFormsApp1.data
         public Dictionary<int, int> AnswerScope { get => answerScope; set => answerScope = value; }
         public int UpNum { get => upNum; set => upNum = value; }
         public int SlotTime { get => slotTime; set => slotTime = value; }
+        public bool CloseThread { get => closeThread; set => closeThread = value; }
     }
 }

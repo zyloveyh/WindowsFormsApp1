@@ -184,6 +184,7 @@ namespace WindowsFormsApp1.util
 
             if (btn.Text == "单条执行")
             {
+                entity.CloseThread = false;
                 //执行线程,开始刷题
                 if (threadDict.ContainsKey(btn.Name))
                 {
@@ -204,7 +205,8 @@ namespace WindowsFormsApp1.util
             else
             {
                 //执行线程,结束刷题
-                btn.Text = "单条执行";
+                btn.Text = "正在结束...";
+                /**
                 Thread th;
                 threadDict.TryGetValue(btn.Name, out th);
                 //线程集合中移除此线程
@@ -221,6 +223,8 @@ namespace WindowsFormsApp1.util
                     }
                     threadDict.Remove(btn.Name);
                 }
+                **/
+                entity.CloseThread = true;
             }
         }
         public static void exercise(Form1 mainForm, QuestionaireEntity questEntity)
@@ -232,18 +236,20 @@ namespace WindowsFormsApp1.util
             int tempNum = 0;
             successNum.TryGetValue(entity.SeriaNum, out tempNum);
 
-            while (tempNum < entity.UpNum)
+            while (tempNum < entity.UpNum && !entity.CloseThread)
             {
                 System.Diagnostics.Debug.WriteLine("开始调用接口,调用时间间隔:" + (entity.SlotTime * 1000).ToString());
 
-                //todo 进行接口调用,判断是否调用成功,更新主界面数据,调用记录保存
-                String resultStr = HttpUtil.HTTPJsonGet(getURL(entity));
+                // 进行接口调用,判断是否调用成功,更新主界面数据,调用记录保存
+                String resultStr = HttpUtil.HTTPJsonGet(entity);
                 System.Diagnostics.Debug.WriteLine("接口返回: " + resultStr);
 
                 //解析返回的结果
                 JavaScriptObject re = JavaScriptConvert.DeserializeObject<JavaScriptObject>(resultStr);
                 if (re == null)
                 {
+                    //log.addLog(getLogStr(entity, " 刷题入库失败! 刷题结果: " + resultStr));
+                    Thread.Sleep(entity.SlotTime * 1000);
                     continue;
                 }
                 string msg = re["msg"].ToString();
@@ -309,7 +315,7 @@ namespace WindowsFormsApp1.util
 
 
             log.addLog(getLogStr(entity, " 刷题结束 "));
-            //走到这里,刷单线程,完成了目标任务
+            //走到这里,刷单线程,即将结束
             //修改按钮的显示
             foreach (var control in mainForm.Controls)
             {
@@ -331,7 +337,7 @@ namespace WindowsFormsApp1.util
         /**
          * 设置打印的日志内容
          */
-        private static string getLogStr(QuestionaireEntity entity, string msg)
+        public static string getLogStr(QuestionaireEntity entity, string msg)
         {
             string name = entity.Name;
             if (entity.Name.Length < 20)
@@ -346,16 +352,7 @@ namespace WindowsFormsApp1.util
             return resultStr;
         }
 
-        private static string getURL(QuestionaireEntity entity)
-        {
-            string result = "";
-            string csrf_test_name = "bb13c888c7da784789d130c081ca9d53";
-            string url = entity.Address;
-            url = url.Replace("m=index", "m=addSelOptions");
-            string optioned = CreateAnswer.createAnswer(entity);
-            result = url + "&optioned=" + optioned + "&csrf_test_name=" + csrf_test_name;
-            return result;
-        }
+
 
         public static string HttpGet()
         {
