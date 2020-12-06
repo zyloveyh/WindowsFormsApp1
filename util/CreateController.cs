@@ -257,12 +257,6 @@ namespace WindowsFormsApp1.util
                 System.Diagnostics.Debug.WriteLine("msg: " + msg);
                 if ("200".Equals(re["code"].ToString()))
                 {
-                    if (msg.Contains("已经填写过问卷"))
-                    {
-                        //已经填写过了
-
-                        log.addLog(getLogStr(entity, " 刷题入库失败! 刷题结果: " + msg));
-                    }
                     if (msg.Contains("问卷添加成功"))
                     {
                         //添加成功了
@@ -298,6 +292,11 @@ namespace WindowsFormsApp1.util
                         }
                         //添加日志
                         log.addLog(getLogStr(entity, " 刷题入库成功! 刷题结果: " + msg));
+                    }
+                    else
+                    {
+                        //已经填写过了问卷或者其他情况
+                        log.addLog(getLogStr(entity, " 刷题入库失败! 刷题结果: " + msg));
                     }
                 }
                 List<QuestionaireEntity> questionList = QuestionaireData.result;
