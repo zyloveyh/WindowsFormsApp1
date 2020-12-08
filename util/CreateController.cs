@@ -32,14 +32,14 @@ namespace WindowsFormsApp1.util
             mainForm = form;
             //序号控件
             Label seriaLable = new Label();
-            seriaLable.Text = entity.SeriaNum;
+            seriaLable.Text = entity.KindNum;
             seriaLable.Size = new System.Drawing.Size(30, 15);
             seriaLable.Location = new System.Drawing.Point(10, y);
             form.Controls.Add(seriaLable);
 
             Label namelabel = new Label();
             namelabel.Text = entity.Name;
-            namelabel.Size = new System.Drawing.Size(140, 15);
+            namelabel.Size = new System.Drawing.Size(140, 30);
             namelabel.Location = new System.Drawing.Point(55, y);
             form.Controls.Add(namelabel);
 
@@ -49,21 +49,18 @@ namespace WindowsFormsApp1.util
             numlabel.Location = new System.Drawing.Point(200, y);
             form.Controls.Add(numlabel);
 
-            TextBox addressText = new TextBox();
-            addressText.Text = entity.Address;
-            addressText.Size = new System.Drawing.Size(195, 30);
-            addressText.Multiline = true;
-            addressText.Location = new System.Drawing.Point(300, y);
-            addressText.BorderStyle = BorderStyle.None;
-
-            form.Controls.Add(addressText);
+            Label codeLabel = new Label();
+            codeLabel.Text = entity.Code;
+            codeLabel.Size = new System.Drawing.Size(50, 30);
+            codeLabel.Location = new System.Drawing.Point(300, y);
+            form.Controls.Add(codeLabel);
 
             NumericUpDown upNumText = new NumericUpDown();
             upNumText.Maximum = 10000;
             upNumText.Name = "upNum_" + entity.SeriaNum;
             upNumText.Text = entity.UpNum.ToString();
             upNumText.Size = new System.Drawing.Size(50, 15);
-            upNumText.Location = new System.Drawing.Point(500, y);
+            upNumText.Location = new System.Drawing.Point(370, y);
             form.Controls.Add(upNumText);
             //添加内容修改事件
             upNumText.ValueChanged += new System.EventHandler(upNumChange);
@@ -74,7 +71,7 @@ namespace WindowsFormsApp1.util
             slotNum.Name = "slotNum_" + entity.SeriaNum;
             slotNum.Value = entity.SlotTime; ;
             slotNum.Size = new System.Drawing.Size(50, 25);
-            slotNum.Location = new System.Drawing.Point(570, y);
+            slotNum.Location = new System.Drawing.Point(440, y);
             form.Controls.Add(slotNum);
             //添加内容修改事件
             slotNum.ValueChanged += new System.EventHandler(slotTimeChange);
@@ -82,7 +79,7 @@ namespace WindowsFormsApp1.util
             Button actionButton = new Button();
             actionButton.Name = entity.SeriaNum;
             actionButton.Text = "单条执行";
-            actionButton.Location = new System.Drawing.Point(690, y);
+            actionButton.Location = new System.Drawing.Point(560, y);
             form.Controls.Add(actionButton);
             //button按钮添加事件
             actionButton.Click += new System.EventHandler(CreateController.btn_Click);
@@ -92,7 +89,7 @@ namespace WindowsFormsApp1.util
             //设置label名称,以便后续查询到
             successNumLabel.Name = "label_" + entity.SeriaNum;
             successNumLabel.AutoSize = true;
-            successNumLabel.Location = new System.Drawing.Point(800, y);
+            successNumLabel.Location = new System.Drawing.Point(670, y);
             form.Controls.Add(successNumLabel);
         }
 
@@ -206,6 +203,7 @@ namespace WindowsFormsApp1.util
             {
                 //执行线程,结束刷题
                 btn.Text = "正在结束...";
+                btn.Enabled = false;
                 /**
                 Thread th;
                 threadDict.TryGetValue(btn.Name, out th);
@@ -325,6 +323,7 @@ namespace WindowsFormsApp1.util
                     {
                         //找到了触发此线程的控件,在线程完成任务后,修改按钮状态
                         tmpBtn.Text = "单条执行";
+                        tmpBtn.Enabled = true;
                         //先维护好线程集合
                         threadDict.Remove(entity.SeriaNum);
                     }

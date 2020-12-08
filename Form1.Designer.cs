@@ -73,12 +73,12 @@ namespace WindowsFormsApp1
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 5;
-            this.label4.Text = "问卷地址";
+            this.label4.Text = "问卷编号";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(500, 10);
+            this.label5.Location = new System.Drawing.Point(370, 10);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(53, 12);
             this.label5.TabIndex = 6;
@@ -87,7 +87,7 @@ namespace WindowsFormsApp1
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(570, 10);
+            this.label6.Location = new System.Drawing.Point(440, 10);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(95, 12);
             this.label6.TabIndex = 7;
@@ -95,7 +95,7 @@ namespace WindowsFormsApp1
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(690, 5);
+            this.button2.Location = new System.Drawing.Point(560, 5);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(96, 23);
             this.button2.TabIndex = 8;
