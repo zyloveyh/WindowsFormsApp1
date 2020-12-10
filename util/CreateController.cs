@@ -122,7 +122,7 @@ namespace WindowsFormsApp1.util
                 }
                 entity.UpNum = int.Parse(tb.Value.ToString());
                 QuestionaireData.result.Add(entity);
-                log.addLog("序号: " + entity.SeriaNum + "修改了刷题上限为: " + entity.UpNum);
+                log.addLog("序号: " + entity.Code + "修改了刷题上限为: " + entity.UpNum);
             }
 
             System.Diagnostics.Debug.WriteLine("刷题数量上限修改为: " + tb.Value.ToString());
@@ -158,7 +158,7 @@ namespace WindowsFormsApp1.util
                 }
                 entity.SlotTime = int.Parse(slotNum.Value.ToString());
                 QuestionaireData.result.Add(entity);
-                log.addLog("序号: " + entity.SeriaNum + "修改了刷题间隔为: " + entity.SlotTime);
+                log.addLog("序号: " + entity.Code + "修改了刷题间隔为: " + entity.SlotTime);
             }
             System.Diagnostics.Debug.WriteLine("刷题间隔时间修改为: " + slotNum.Value);
         }
@@ -346,7 +346,7 @@ namespace WindowsFormsApp1.util
                 }
             }
             string resultStr = "";
-            resultStr = "序号: " + entity.SeriaNum + " 问卷名称: " + name + msg;
+            resultStr = "序号: " + entity.Code + " 问卷名称: " + name + msg;
             return resultStr;
         }
 
