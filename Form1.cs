@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.OleDb;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApp1.data;
 using WindowsFormsApp1.util;
+
 namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
@@ -19,8 +21,19 @@ namespace WindowsFormsApp1
             InitializeComponent();
         }
 
+        private Login login;
+
+
         private void Form1_Load(object sender, EventArgs e)
         {
+
+            if (LoginSecurity.checkBossComputer())
+            {
+                //是管理员用的电脑
+                button1.Visible = true;
+            }
+
+
             //打开日志窗体
             logForm log = logForm.InstanceLogForm();
             log.Show();
@@ -42,7 +55,7 @@ namespace WindowsFormsApp1
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            Button allBtn = (Button)sender;
+            System.Windows.Forms.Button allBtn = (System.Windows.Forms.Button)sender;
             if (allBtn.Text.Equals("全部执行"))
             {
                 allBtn.Enabled = false;
@@ -106,6 +119,11 @@ namespace WindowsFormsApp1
             }
         }
 
+        public void setLoginVisableFalse(Login login)
+        {
+            this.login = login;
+            login.Visible = false;
+        }
 
 
         private void overTurnBtnState(Boolean state)
@@ -120,7 +138,7 @@ namespace WindowsFormsApp1
             {
                 if (control.GetType().Name.Equals("Button"))
                 {
-                    Button btn = (Button)control;
+                    System.Windows.Forms.Button btn = (System.Windows.Forms.Button)control;
                     if (serialList.Contains(btn.Name))
                     {
                         //确认是生成出来的Button控件,修改enable 状态
@@ -147,6 +165,22 @@ namespace WindowsFormsApp1
             logForm log = logForm.InstanceLogForm();
             log.Visible = !log.Visible;
 
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
+            if (null != login)
+            {
+                login.Close();
+            }
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            passwordForm pwd = passwordForm.createForm();
+            pwd.Show();
         }
     }
 }

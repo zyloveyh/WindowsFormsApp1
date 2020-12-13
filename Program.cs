@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsFormsApp1.util;
 
 namespace WindowsFormsApp1
 {
@@ -16,10 +17,20 @@ namespace WindowsFormsApp1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Form1 f1 = new Form1();
- 
-            Application.Run(f1);
-            
+
+            if (LoginSecurity.checkBossComputer())
+            {
+                //是管理员用的电脑
+                Form1 f1 = new Form1();
+                Application.Run(f1);
+            }
+            else
+            {
+                Login login = new Login();
+                Application.Run(login);
+            }
+
+
         }
     }
 }

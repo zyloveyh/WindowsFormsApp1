@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Excel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace WindowsFormsApp1.data
 {
@@ -16,19 +18,131 @@ namespace WindowsFormsApp1.data
          */
         public static List<QuestionaireEntity> getData()
         {
-            if (result.Count > 0)
+            try
             {
-                //result 有值,则返回这个值,避免多次调用出现bug
-                return result;
+
+
+                if (result.Count > 0)
+                {
+                    //result 有值,则返回这个值,避免多次调用出现bug
+                    return result;
+                }
+                string str = System.AppDomain.CurrentDomain.BaseDirectory;
+                System.Diagnostics.Debug.WriteLine("文件根路径:" + str);
+                string excelPath = str + "刷题配置.xlsx";
+
+                Application excel = new Application();
+                excel.Visible = false;
+                excel.DisplayAlerts = false;
+
+                object missing = System.Reflection.Missing.Value;
+                // 以只读的形式打开EXCEL文件
+                Workbook wb = excel.Application.Workbooks.Open(excelPath, missing, true, missing, missing, missing,
+                 missing, missing, missing, true, missing, missing, missing, missing, missing);
+                //取得第一个工作薄
+                Worksheet ws = (Worksheet)wb.Worksheets.get_Item(1);
+                int rowCount = 0;
+                try
+                {
+                    rowCount = ws.UsedRange.Rows.Count;//赋值有效行
+
+                    string ordernum = string.Empty;
+                    string count = string.Empty;
+
+                    //循环行
+                    for (int i = 2; i <= rowCount; i++)//
+                    {
+                        if (ws.Rows[i] != null)
+                        {
+                            QuestionaireEntity entity = new QuestionaireEntity();
+                            entity.SeriaNum = i.ToString();
+                            entity.KindNum = ((Range)ws.Cells[i, 1]).Value2.ToString();
+                            entity.Name = ((Range)ws.Cells[i, 2]).Value2.ToString();
+                            entity.Code = ((Range)ws.Cells[i, 3]).Value2.ToString();
+                            entity.Address = ((Range)ws.Cells[i, 4]).Value2.ToString();
+
+                            try
+                            {
+                                entity.QuestionNum = int.Parse(((Range)ws.Cells[i, 5]).Value2.ToString());
+                                entity.UpNum = int.Parse(((Range)ws.Cells[i, 7]).Value2.ToString());
+                                entity.SlotTime = int.Parse(((Range)ws.Cells[i, 8]).Value2.ToString());
+                            }
+                            catch (Exception)
+                            {
+                                //答题数量和范围数量对不上
+                                logForm log = logForm.InstanceLogForm();
+                                log.addLog("问卷编号:" + entity.Code + " 题目数量/刷题上限/刷题时间间隔,为非法数字,请确认...");
+                                continue;
+                            }
+                            Dictionary<int, int> ansDict = new Dictionary<int, int>();
+
+                            //获取答题答案范围
+                            string ansScope = ((Range)ws.Cells[i, 6]).Value2.ToString();
+                            String[] ansScopeArray = ansScope.Split(',');
+                            if (entity.QuestionNum != ansScopeArray.Length)
+                            {
+                                //答题数量和范围数量对不上
+                                logForm log = logForm.InstanceLogForm();
+                                log.addLog("问卷编号:" + entity.Code + " 答题数量和答题范围 的数量匹配不上,请确认...");
+                                continue;
+                            }
+
+                            bool continueStatus = false;
+                            for (int ansIndex = 1; ansIndex <= ansScopeArray.Length; ansIndex++)
+                            {
+                                string scopeStr = ansScopeArray[ansIndex - 1];
+                                try
+                                {
+                                    int scopInt = int.Parse(scopeStr);
+                                    ansDict.Add(ansIndex, scopInt);
+                                }
+                                catch (Exception)
+                                {
+                                    logForm log = logForm.InstanceLogForm();
+                                    log.addLog("问卷编号:" + entity.Code + " 答案范围内有非法数字,请确认...");
+                                    continueStatus = true;
+                                    continue;
+                                }
+
+                            }
+                            if (continueStatus)
+                            {
+                                continue;
+                            }
+
+                            entity.AnswerScope = ansDict;
+                            result.Add(entity);
+
+                        }
+                    }
+                    //循环列
+                    //for (int i = 1; i <= ws.UsedRange.Columns.Count; i++)
+                    // {
+                    //ws.Columns[i]
+                    //}
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("读取excel出错:" + ex.Message);
+                }
+                finally
+                {
+                    ClosePro(excelPath, excel, wb);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("读取excel出错:" + ex.Message);
             }
 
+            /**
             QuestionaireEntity entity20_1 = new QuestionaireEntity();
 
             QuestionaireEntity entity21_1 = new QuestionaireEntity();
 
-            /**
-             * 医疗机构医疗器械使用情况调研问卷（一)
-             */
+            //
+            //医疗机构医疗器械使用情况调研问卷（一)
+            //
 
             entity20_1.SeriaNum = "1";
             entity20_1.KindNum = "5";
@@ -112,9 +226,9 @@ namespace WindowsFormsApp1.data
             result.Add(entity20_11);
 
 
-            /**
-             * 医疗机构医疗器械使用情况调研问卷（二)
-             */
+            //
+            //医疗机构医疗器械使用情况调研问卷（二)
+            //
 
             entity21_1.SeriaNum = "12";
             entity21_1.KindNum = "6";
@@ -187,9 +301,7 @@ namespace WindowsFormsApp1.data
             entity21_5.Address = "http://www.masghkj.com/index.php?s=questionnaire&c=options&m=index&cid=21&eid=24&suid=7&puid=46";
             result.Add(entity21_5);
 
-
-
-
+            **/
 
             /**
             entity1.SeriaNum = "1";
@@ -295,5 +407,55 @@ namespace WindowsFormsApp1.data
 
             return result;
         }
+
+
+        private static List<QuestionaireEntity> setData(List<QuestionaireEntity> entitys)
+        {
+            result.Clear();
+            result.AddRange(entitys);
+            return result;
+        }
+
+
+        /// <summary>
+        /// 关闭Excel进程
+        /// </summary>
+        /// <param name="excelPath"></param>
+        /// <param name="excel"></param>
+        /// <param name="wb"></param>
+        public static void ClosePro(string excelPath, Microsoft.Office.Interop.Excel.Application excel, Microsoft.Office.Interop.Excel.Workbook wb)
+        {
+            System.Diagnostics.Process[] localByNameApp = System.Diagnostics.Process.GetProcessesByName(excelPath);//获取程序名的所有进程
+            if (localByNameApp.Length > 0)
+            {
+                foreach (var app in localByNameApp)
+                {
+                    if (!app.HasExited)
+                    {
+                        #region
+                        ////设置禁止弹出保存和覆盖的询问提示框   
+                        //excel.DisplayAlerts = false;
+                        //excel.AlertBeforeOverwriting = false;
+
+                        ////保存工作簿   
+                        //excel.Application.Workbooks.Add(true).Save();
+                        ////保存excel文件   
+                        //excel.Save("D:" + "\\test.xls");
+                        ////确保Excel进程关闭   
+                        //excel.Quit();
+                        //excel = null; 
+                        #endregion
+                        app.Kill();//关闭进程  
+                    }
+                }
+            }
+            if (wb != null)
+                wb.Close(true, Type.Missing, Type.Missing);
+            excel.Quit();
+            // 安全回收进程
+            System.GC.GetGeneration(excel);
+        }
+
+
     }
 }
