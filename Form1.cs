@@ -32,25 +32,6 @@ namespace WindowsFormsApp1
                 //是管理员用的电脑
                 button1.Visible = true;
             }
-
-
-            //打开日志窗体
-            logForm log = logForm.InstanceLogForm();
-            log.Show();
-            log.Visible = false;
-            //设置数据
-            CheckForIllegalCrossThreadCalls = false;
-            List<QuestionaireEntity> dataList = QuestionaireData.getData();
-            for (int i = 0; i < dataList.Count; i++)
-            {
-                CreateController.addController(10, (1 + i) * 35, this, dataList[i]);
-            }
-
-            //foreach (QuestionaireEntity entity in dataList)
-            //{
-            //     CreateController.addController
-            // }
-
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -181,6 +162,21 @@ namespace WindowsFormsApp1
         {
             passwordForm pwd = passwordForm.createForm();
             pwd.Show();
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            //打开日志窗体
+            logForm log = logForm.InstanceLogForm();
+            log.Show();
+            log.Visible = false;
+            //设置数据
+            CheckForIllegalCrossThreadCalls = false;
+            List<QuestionaireEntity> dataList = QuestionaireData.getData();
+            for (int i = 0; i < dataList.Count; i++)
+            {
+                CreateController.addController(10, (1 + i) * 35, this, dataList[i]);
+            }
         }
     }
 }

@@ -38,69 +38,76 @@ namespace WindowsFormsApp1
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(108, 115);
+            this.textBox1.Location = new System.Drawing.Point(123, 127);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(276, 45);
+            this.textBox1.Size = new System.Drawing.Size(295, 55);
             this.textBox1.TabIndex = 0;
             // 
             // comboBox1
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(108, 16);
+            this.comboBox1.Location = new System.Drawing.Point(123, 21);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 20);
+            this.comboBox1.Size = new System.Drawing.Size(160, 23);
             this.comboBox1.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 19);
+            this.label1.Location = new System.Drawing.Point(32, 24);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 12);
+            this.label1.Size = new System.Drawing.Size(83, 15);
             this.label1.TabIndex = 2;
             this.label1.Text = "选择电脑: ";
             // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.button1.Location = new System.Drawing.Point(108, 56);
+            this.button1.Location = new System.Drawing.Point(123, 69);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 42);
+            this.button1.Size = new System.Drawing.Size(100, 40);
             this.button1.TabIndex = 3;
-            this.button1.Text = "生成验证码";
+            this.button1.Text = "生成秘钥";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(24, 115);
+            this.label2.Location = new System.Drawing.Point(32, 142);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(47, 12);
+            this.label2.Size = new System.Drawing.Size(45, 15);
             this.label2.TabIndex = 4;
-            this.label2.Text = "验证码:";
+            this.label2.Text = "秘钥:";
             // 
             // passwordForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(396, 172);
+            this.ClientSize = new System.Drawing.Size(443, 215);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.textBox1);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "passwordForm";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "验证码:";
+            this.Text = "秘钥生成";
             this.Load += new System.EventHandler(this.passwordForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

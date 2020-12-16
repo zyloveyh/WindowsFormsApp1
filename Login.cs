@@ -21,7 +21,10 @@ namespace WindowsFormsApp1
             
             try
             {
-                if (LoginSecurity.checkPassword(textBox1.Text))
+                if (textBox1.Text.Trim()=="") {
+                    return;
+                }
+                if (LoginSecurity.checkPassword(textBox1.Text.Trim()))
                 {
                     //密码校验成功
                     Form1 mainForm = new Form1();
@@ -32,13 +35,13 @@ namespace WindowsFormsApp1
                 else
                 {
                     //密码校验失败
-                    MessageBox.Show("验证码无效,或已经过时,请重新输入");
+                    MessageBox.Show("密钥无效,或已经过时,请重新输入");
                 }
             }
             catch
             {
                 //密码校验失败
-                MessageBox.Show("验证码无效输入错误");
+                MessageBox.Show("密钥无效输入错误,请重试");
             }
 
         }

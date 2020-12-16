@@ -30,7 +30,8 @@ namespace WindowsFormsApp1
         {
             //初始化的时候,加在电脑信息
             macDict.Add("电脑一", "244BFE96C3DE");
-
+            macDict.Add("郑远", "00AC20D83586");
+            macDict.Add("秦坤", "00ACD1D81394");
             InitializeComponent();
         }
 
