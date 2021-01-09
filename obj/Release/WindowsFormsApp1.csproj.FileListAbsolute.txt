@@ -1,10 +1,9 @@
 D:\ZY\2-c#\WindowsFormsApp1\bin\Release\工具.exe.config
 D:\ZY\2-c#\WindowsFormsApp1\bin\Release\工具.exe
 D:\ZY\2-c#\WindowsFormsApp1\bin\Release\工具.pdb
-D:\ZY\2-c#\WindowsFormsApp1\bin\Release\Excel.dll
-D:\ZY\2-c#\WindowsFormsApp1\bin\Release\Microsoft.QualityTools.Testing.Fakes.dll
 D:\ZY\2-c#\WindowsFormsApp1\bin\Release\Newtonsoft.Json.dll
-D:\ZY\2-c#\WindowsFormsApp1\bin\Release\stdole.dll
+D:\ZY\2-c#\WindowsFormsApp1\bin\Release\Office.dll
+D:\ZY\2-c#\WindowsFormsApp1\bin\Release\Microsoft.Office.Interop.Excel.dll
 D:\ZY\2-c#\WindowsFormsApp1\obj\Release\WindowsFormsApp1.csproj.ResolveComReference.cache
 D:\ZY\2-c#\WindowsFormsApp1\obj\Release\WindowsFormsApp1.Form1.resources
 D:\ZY\2-c#\WindowsFormsApp1\obj\Release\WindowsFormsApp1.logForm.resources

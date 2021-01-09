@@ -189,7 +189,7 @@ namespace WindowsFormsApp1.util
         {
             List<String> macStr = LoginSecurity.GetMacAddress();
 
-            if (macStr.Contains("E0B9A51D6A30") || macStr.Contains("00ACD1D81394") || macStr.Contains("00AC20D83586z"))
+            if (macStr.Contains("000C293E00DC") ||macStr.Contains("E0B9A51D6A30") || macStr.Contains("00ACD1D81394") || macStr.Contains("00AC20D83586z"))
             {
                 //是管理员用的电脑
                 return true;
